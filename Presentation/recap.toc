@@ -1,0 +1,15 @@
+\babel@toc {english}{}
+\beamer@sectionintoc {1}{Representation Learning}{3}{0}{1}
+\beamer@sectionintoc {2}{Representation Learning using VAEs}{8}{0}{2}
+\beamer@subsectionintoc {2}{1}{Intro to Variational Autoencoder}{8}{0}{2}
+\beamer@subsectionintoc {2}{2}{Experimental Setup}{10}{0}{2}
+\beamer@subsectionintoc {2}{3}{Results}{14}{0}{2}
+\beamer@subsectionintoc {2}{4}{Shortcomings of VAEs}{16}{0}{2}
+\beamer@sectionintoc {3}{InfoVAE}{18}{0}{3}
+\beamer@subsectionintoc {3}{1}{Intro to InfoVAE}{18}{0}{3}
+\beamer@subsectionintoc {3}{2}{Maximum Mean Discrepancy}{19}{0}{3}
+\beamer@subsectionintoc {3}{3}{Implementation Details}{20}{0}{3}
+\beamer@subsectionintoc {3}{4}{Results}{21}{0}{3}
+\beamer@sectionintoc {4}{Flexible Representations}{24}{0}{4}
+\beamer@subsectionintoc {4}{1}{Matryoshka Representation Learning}{25}{0}{4}
+\beamer@sectionintoc {5}{Future Roadmap}{28}{0}{5}
