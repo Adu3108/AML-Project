@@ -166,7 +166,7 @@
         \includegraphics[width=0.9\textwidth]{./Images/MNIST_VAE_MAP.png}
         \caption{Maximum a posteriori}
     \end{subfigure}
-    \caption{Classification Accuracy on MNIST Dataset for different latent sizes}
+    \caption{Classification Accuracy of VAE on MNIST Dataset}
   \end{figure}
 \end{frame}
 
@@ -177,19 +177,21 @@
   \end{enumerate}
   \begin{itemize}
     \item Similar to MNIST Dataset, the classification accuracy for posterior sampling varies around 10 which is comparable to random labeling.
-    % \item For Maximum a posteriori, the classification accuracy increases as we increase the dimensionality of the latent space.
+    \item For Maximum a posteriori, the classification accuracy increases as we increase the dimensionality of the latent space. However, the best classification accuracy is 26.74 which is low compared to SOTA.
   \end{itemize}
+  \vspace{-0.5em}
   \begin{figure}
     \begin{subfigure}[b]{0.4\textwidth}
         \centering
         \includegraphics[width=0.9\textwidth,]{./Images/FashionMNIST_VAE_sampling.png}
         \caption{Posterior Sampling}
     \end{subfigure}
-    % \begin{subfigure}[b]{0.4\textwidth}
-    %     \centering
-    %     \includegraphics[width=0.9\textwidth]{./Images/VAE_MAP.png}
-    %     \caption{Maximum a posteriori}
-    % \end{subfigure}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{./Images/FashionMNIST_VAE_MAP.png}
+        \caption{Maximum a posteriori}
+    \end{subfigure}
+    \caption{Classification Accuracy of VAE on FashionMNIST Dataset}
   \end{figure}
 \end{frame}
 
@@ -212,7 +214,7 @@
         \includegraphics[width=\textwidth]{./Images/latent_FashionMNIST_VAE_Sampling.png}
         \caption{FashionMNIST Dataset}
     \end{subfigure}
-    \caption{Latent Space for Posterior Sampling}
+    \caption{Latent Space of VAE for Posterior Sampling}
   \end{figure}
 \end{frame}
 
@@ -228,12 +230,12 @@
         \includegraphics[width=\textwidth,]{./Images/latent_MNIST_VAE_MAP.png}
         \caption{MNIST Dataset}
     \end{subfigure}
-    % \begin{subfigure}[b]{0.4\textwidth}
-    %     \centering
-    %     \includegraphics[width=\textwidth]{./Images/latent_FashionMNIST_VAE_MAP.png}
-    %     \caption{FashionMNIST Dataset}
-    % \end{subfigure}
-    \caption{Latent Space for Maximum a posteriori}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./Images/latent_FashionMNIST_VAE_MAP.png}
+        \caption{FashionMNIST Dataset}
+    \end{subfigure}
+    \caption{Latent Space of VAE for Maximum a posteriori}
   \end{figure}
 \end{frame}
 
@@ -291,19 +293,20 @@
   \end{enumerate}
   \begin{itemize}
     \item Barring the 2-dimensional case, the classification accuracy for posterior sampling approaches 98\% which is comparable to SOTA.
-    % \item For Maximum a posteriori, the classification accuracy increases as we increase the dimensionality of the latent space.
+    \item The classification accuracy for Maximum a posteriori follows a similar pattern as that of Posterior Sampling.
   \end{itemize}
   \begin{figure}
-    \begin{subfigure}[b]{0.45\textwidth}
+    \begin{subfigure}[b]{0.4\textwidth}
         \centering
-        \includegraphics[width=0.9\textwidth,]{./Images/MNIST_Compare_Sampling.png}
+        \includegraphics[width=0.9\textwidth,]{./Images/MNIST_MMD_Sampling.png}
         \caption{Posterior Sampling}
     \end{subfigure}
-    % \begin{subfigure}[b]{0.4\textwidth}
-    %     \centering
-    %     \includegraphics[width=0.9\textwidth]{./Images/VAE_MAP.png}
-    %     \caption{Maximum a posteriori}
-    % \end{subfigure}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{./Images/MNIST_MMD_MAP.png}
+        \caption{Maximum a posteriori}
+    \end{subfigure}
+    \caption{Classification Accuracy of InfoVAE on MNIST Dataset}
   \end{figure}
 \end{frame}
 
@@ -314,7 +317,7 @@
   \end{enumerate}
   \begin{itemize}
     \item Similar to MNIST Dataset, classification accuracy for posterior sampling approaches 90\%.
-  % \item For Maximum a posteriori, the classification accuracy increases as we increase the dimensionality of the latent space.
+    \item The classification accuracy for Maximum a posteriori follows a similar pattern as that of Posterior Sampling.
   \end{itemize}
   \begin{figure}
     \begin{subfigure}[b]{0.4\textwidth}
@@ -322,31 +325,53 @@
         \includegraphics[width=0.9\textwidth,]{./Images/FashionMNIST_MMD_sampling.png}
         \caption{Posterior Sampling}
     \end{subfigure}
-    % \begin{subfigure}[b]{0.4\textwidth}
-    %     \centering
-    %     \includegraphics[width=0.9\textwidth]{./Images/VAE_MAP.png}
-    %     \caption{Maximum a posteriori}
-    % \end{subfigure}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{./Images/FashionMNIST_MMD_MAP.png}
+        \caption{Maximum a posteriori}
+    \end{subfigure}
+    \caption{Classification Accuracy of InfoVAE on FashionMNIST Dataset}
   \end{figure}
 \end{frame}
 
 \begin{frame}{\transparent{0.4} Towards \transparent{1}\textbf{Learning Better} \transparent{0.4}and Flexible \transparent{1}\textbf{Representations from Variational Autoencoders} \vspace{0.3em}}
   \begin{itemize}
-    \item After plotting the latent space
-  % \item For Maximum a posteriori, the classification accuracy increases as we increase the dimensionality of the latent space.
+    \item After plotting the latent space of InfoVAE, we observed the formation of distinct clusters in the latent space corresponding to each class.
+    \item Due to the formation of distinct clusters in the latent space, we are able to achieve such good performance in the downstream classification task.
   \end{itemize}
-  % \begin{figure}
-  %   \begin{subfigure}[b]{0.4\textwidth}
-  %       \centering
-  %       \includegraphics[width=0.9\textwidth,]{./Images/FashionMNIST_MMD_sampling.png}
-  %       \caption{Posterior Sampling}
-  %   \end{subfigure}
+  \begin{figure}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth,]{./Images/latent_MNIST_MMD_Sampling.png}
+        \caption{MNIST Dataset}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./Images/latent_FashionMNIST_MMD_Sampling.png}
+        \caption{FashionMNIST}
+    \end{subfigure}
+    \caption{Latent Space of InfoVAE for Posterior Sampling}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{\transparent{0.4} Towards \transparent{1}\textbf{Learning Better} \transparent{0.4}and Flexible \transparent{1}\textbf{Representations from Variational Autoencoders} \vspace{0.3em}}
+  % \begin{itemize}
+  %   \item After plotting the latent space of InfoVAE, we observed the formation of distinct clusters in the latent space corresponding to each class.
+  %   \item Due to the formation of distinct clusters in the latent space, we are able to achieve such good performance in the downstream classification task.
+  % \end{itemize}
+  \begin{figure}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth,]{./Images/latent_MNIST_MMD_MAP.png}
+        \caption{MNIST Dataset}
+    \end{subfigure}
     % \begin{subfigure}[b]{0.4\textwidth}
     %     \centering
-    %     \includegraphics[width=0.9\textwidth]{./Images/VAE_MAP.png}
+    %     \includegraphics[width=\textwidth]{./Images/latent_MNIST_MMD_MAP.png}
     %     \caption{Maximum a posteriori}
     % \end{subfigure}
-  % \end{figure}
+    \caption{Latent Space of InfoVAE for Maximum a posteriori}
+  \end{figure}
 \end{frame}
 
 \section{Flexible Representations}
