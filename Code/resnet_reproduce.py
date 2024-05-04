@@ -6,6 +6,7 @@ from torch import nn
 from typing import List
 import tqdm
 
+device = "cuda" if torch.cuda.is_available() else "cpu"
 # Define transforms for the dataset
 transform_train = transforms.Compose([
     transforms.RandomCrop(32, padding=4),
@@ -34,7 +35,7 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False,
 
 # Define ResNet model
 net = models.resnet50()
-
+net.to(device=device)
 # Define classifier model
 class FeedForwardClassifier(torch.nn.Module):
     def __init__(self, output_dim, embed_size) -> None:
@@ -54,7 +55,7 @@ class FeedForwardClassifier(torch.nn.Module):
         return torch.argmax(probabilities, dim=1)
 num_classes = 100
 classifier = FeedForwardClassifier(output_dim=num_classes, embed_size=1000)
-
+classifier.to(device=device)
 # Define Matryoshka CE Loss : verbatim
 class Matryoshka_CE_Loss(nn.Module):
 	def __init__(self, relative_importance: List[float]=None, **kwargs):
@@ -92,7 +93,7 @@ for epoch in range(100):  # loop over the dataset multiple times
     for i, data in tqdm.tqdm(enumerate(trainloader, 0)):
         # get the inputs; data is a list of [inputs, labels]
         inputs, labels = data
-
+        inputs.to(device)
         # zero the parameter gradients
         optimizer.zero_grad()
 
@@ -140,3 +141,4 @@ with torch.no_grad():
 
 print('Accuracy of the network on the 10000 test images: %d %%' % (
     100 * correct / total))
+
