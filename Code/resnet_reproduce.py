@@ -160,8 +160,8 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", cl_e
             best_model = net
             for i in range(embed_logs):
                 best_classifiers[i] = classifiers[i]
-                torch.save(best_classifiers[i].state_dict(), "best_classifier_"+str(i+1)+".pth")
-            torch.save(best_model.state_dict(), "best_model.pth")
+                torch.save(best_classifiers[i].state_dict(), "../../best_classifier_"+str(i+1)+".pth")
+            torch.save(best_model.state_dict(), "../../best_resnet_model.pth")
 
         print('Current Mean Accuracy:', curr_mean, 'Best Mean Accuracy:', m_acc)
     print('Finished Training')
