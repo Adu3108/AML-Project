@@ -57,7 +57,7 @@ class FeedForwardClassifier(torch.nn.Module):
         return torch.argmax(probabilities, dim=1)
 
 def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", load_previous = False, cl_embed_size = 1000, batch_size = 128):
-    resnet.to(device=device)
+    resnet = resnet.to(device=device)
     # Define relative importance if mode == "matryoshka"
     if mode == "matryoshka":
         embed_logs = int(np.log(cl_embed_size)/np.log(2)) + 1 if np.log(cl_embed_size)/np.log(2) != int(np.log(cl_embed_size)/np.log(2)) else int(np.log(cl_embed_size)/np.log(2))
@@ -71,7 +71,7 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", load
         for i in range(embed_logs):
             classifiers.append(FeedForwardClassifier(output_dim=num_classes, embed_size=min(2**(i+1), cl_embed_size)))
             classifiers[i].load_state_dict(torch.load("../../best_classifier_"+str(i+1)+".pth"))
-            classifiers[i].to(device=device)
+            classifiers[i-1] = classifiers[i].to(device=device)
             classifiers[i].train()
     else:
         # Define the list of classifiers
@@ -79,7 +79,7 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", load
         best_classifiers =[None for i in range(embed_logs)]
         for i in range(embed_logs):
             classifiers.append(FeedForwardClassifier(output_dim=num_classes, embed_size=min(2**(i+1), cl_embed_size)))
-            classifiers[i-1].to(device=device)
+            classifiers[i-1] = classifiers[i-1].to(device=device)
             classifiers[i-1].train()
 
     # Define loss function
