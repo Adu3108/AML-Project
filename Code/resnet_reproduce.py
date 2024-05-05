@@ -57,7 +57,7 @@ class FeedForwardClassifier(torch.nn.Module):
         return torch.argmax(probabilities, dim=1)
 
 def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", load_previous = False, cl_embed_size = 1000, batch_size = 128):
-
+    resnet.to(device=device)
     # Define relative importance if mode == "matryoshka"
     if mode == "matryoshka":
         embed_logs = int(np.log(cl_embed_size)/np.log(2)) + 1 if np.log(cl_embed_size)/np.log(2) != int(np.log(cl_embed_size)/np.log(2)) else int(np.log(cl_embed_size)/np.log(2))
@@ -103,7 +103,6 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", load
             labels.to(device)
             # zero the parameter gradients
             optimizer.zero_grad()
-
             outputs_ = resnet(inputs)
             for j in range(embed_logs):
                 if j == 0:
