@@ -130,7 +130,7 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", load
             correct = 0   
             for j, data in enumerate(valloader):
                 images, labels = data
-                inputs = inputs.to(device)
+                images = images.to(device)
                 labels = labels.to(device)
                 outputs = resnet(images)
                 predicted = classifiers[i].predict(outputs[:, :min(2**(i+1), cl_embed_size)])
