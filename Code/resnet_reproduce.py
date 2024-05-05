@@ -86,7 +86,7 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", load
     criterion =  nn.CrossEntropyLoss().to(device=device)
 
     # Define optimizer
-    optimizer = torch.optim.NAdam(net.parameters(), lr=0.003)
+    optimizer = torch.optim.Adam(net.parameters(), lr=0.0003)
 
     m_acc = 0
 
