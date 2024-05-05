@@ -105,7 +105,7 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", cl_e
 
     # Train the model
     for epoch in range(num_epochs):  # loop over the dataset multiple times
-        net.train()
+        resnet.train()
         for i in range(embed_logs):
             classifiers[i].train()
         running_loss = 0.0
@@ -116,7 +116,7 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", cl_e
             # zero the parameter gradients
             optimizer.zero_grad()
 
-            outputs_ = net(inputs)
+            outputs_ = resnet(inputs)
             temp_outputs = torch.zeros((batch_size, num_classes)).to(device=device)
             for i in range(embed_logs):
                 outputs = classifiers[i](outputs_[:,:min(2**(i+1), cl_embed_size)])
@@ -143,7 +143,7 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", cl_e
             correct = 0   
             for i, data in enumerate(valloader):
                 images, labels = data
-                outputs = net(images)
+                outputs = resnet(images)
                 outputs = classifiers[i](outputs[:, :min(2**(i+1), cl_embed_size)])
                 _, predicted = torch.max(outputs.data, 1)
                 total += labels.size(0)
