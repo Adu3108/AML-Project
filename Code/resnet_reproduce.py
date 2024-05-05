@@ -47,7 +47,7 @@ class FeedForwardClassifier(torch.nn.Module):
 
     def forward(self, embedding):
         x = embedding.squeeze()
-        x = torch.nn.ReLU()(self.fc1(x))
+        x = torch.nn.ReLU()(self.fc1(x)).to(device)
         output = self.fc2(x)
         return output
 
