@@ -56,36 +56,13 @@ class FeedForwardClassifier(torch.nn.Module):
         probabilities = torch.nn.Softmax()(logits)
         return torch.argmax(probabilities, dim=1)
     
-# Define Matryoshka CE Loss : verbatim
-# class Matryoshka_CE_Loss(nn.Module):
-# 	def __init__(self, relative_importance: List[float]=None, **kwargs):
-# 		super(Matryoshka_CE_Loss, self).__init__()
-# 		self.criterion = nn.CrossEntropyLoss(**kwargs)
-# 		# relative importance shape: [G]
-# 		self.relative_importance = relative_importance
-
-# 	def forward(self, output, target):
-# 		# output shape: [G granularities, N batch size, C number of classes]
-# 		# target shape: [N batch size]
-
-# 		# Calculate losses for each output and stack them. This is still O(N)
-# 		losses = torch.stack([self.criterion(output_i, target) for output_i in output])
-		
-# 		# Set relative_importance to 1 if not specified
-# 		rel_importance = torch.ones_like(losses) if self.relative_importance is None else torch.tensor(self.relative_importance)
-		
-# 		# Apply relative importance weights
-# 		weighted_losses = rel_importance * losses
-# 		return weighted_losses.sum()
-
 def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", cl_embed_size = 1000, batch_size = 128):
 
     # Define relative importance if mode == "matryoshka"
     if mode == "matryoshka":
-         embed_logs = int(np.log(cl_embed_size)/np.log(2)) + 1 if np.log(cl_embed_size)/np.log(2) != int(np.log(cl_embed_size)/np.log(2)) else int(np.log(cl_embed_size)/np.log(2))
-         relative_importance = np.ones(embed_logs)
+        embed_logs = int(np.log(cl_embed_size)/np.log(2)) + 1 if np.log(cl_embed_size)/np.log(2) != int(np.log(cl_embed_size)/np.log(2)) else int(np.log(cl_embed_size)/np.log(2))
     else:
-         relative_importance = None
+        embed_logs = 1         
 
     # Define the list of classifiers
     classifiers = []
@@ -99,7 +76,7 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", cl_e
     criterion =  nn.CrossEntropyLoss()
 
     # Define optimizer
-    optimizer = torch.optim.SGD(net.parameters(), lr=0.01, momentum=0.9, weight_decay=5e-4)
+    optimizer = torch.optim.NAdam(net.parameters(), lr=0.003)
 
     m_acc = 0
 
@@ -109,7 +86,7 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", cl_e
         for i in range(embed_logs):
             classifiers[i].train()
         running_loss = 0.0
-        for i, data in (enumerate(trainloader, 0)):
+        for i, data in tqdm.tqdm(enumerate(trainloader, 0), total=len(trainloader)):
             # get the inputs; data is a list of [inputs, labels]
             inputs, labels = data
             inputs.to(device)
@@ -117,15 +94,15 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", cl_e
             optimizer.zero_grad()
 
             outputs_ = resnet(inputs)
-            temp_outputs = torch.zeros((batch_size, num_classes)).to(device=device)
-            for i in range(embed_logs):
-                outputs = classifiers[i](outputs_[:,:min(2**(i+1), cl_embed_size)])
+            for j in range(embed_logs):
+                if j == 0:
+                    temp_outputs = torch.zeros((len(inputs), num_classes)).to(device=device)
+                outputs = classifiers[j](outputs_[:,:min(2**(j+1), cl_embed_size)])
                 temp_outputs += outputs
             outputs = temp_outputs
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
-
             # print statistics
             running_loss += loss.item()
 
@@ -140,11 +117,10 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", cl_e
         for i in range(embed_logs):
             total = 0
             correct = 0   
-            for i, data in enumerate(valloader):
+            for j, data in enumerate(valloader):
                 images, labels = data
                 outputs = resnet(images)
-                outputs = classifiers[i](outputs[:, :min(2**(i+1), cl_embed_size)])
-                _, predicted = torch.max(outputs.data, 1)
+                predicted = classifiers[i].predict(outputs[:, :min(2**(i+1), cl_embed_size)])
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
             accuracy = correct/total*100
@@ -177,8 +153,7 @@ with torch.no_grad():
         for data in testloader:
             images, labels = data
             outputs = net(images)
-            outputs = best_classifiers[i](outputs[:, :min(2**(i+1), 1000)])
-            _, predicted = torch.max(outputs.data, 1)
+            predicted = best_classifiers[i].predict(outputs[:, :min(2**(i+1), 1000)])
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
         print("Accuracy for classifier", i, ":", correct/total*100)
