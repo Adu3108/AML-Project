@@ -106,7 +106,8 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", load
             outputs_ = resnet(inputs)
             for j in range(embed_logs):
                 if j == 0:
-                    temp_outputs = torch.zeros((len(inputs), num_classes)).to(device=device)
+                    temp_outputs = torch.zeros((len(inputs), num_classes))
+                    temp_outputs = temp_outputs.to(device)
                 outputs = classifiers[j](outputs_[:,:min(2**(j+1), cl_embed_size)])
                 temp_outputs += outputs
             outputs = temp_outputs
