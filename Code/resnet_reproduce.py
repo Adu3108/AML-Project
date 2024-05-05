@@ -83,7 +83,7 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", load
             classifiers[i-1].train()
 
     # Define loss function
-    criterion =  nn.CrossEntropyLoss()
+    criterion =  nn.CrossEntropyLoss().to(device=device)
 
     # Define optimizer
     optimizer = torch.optim.NAdam(net.parameters(), lr=0.003)
@@ -103,7 +103,7 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", load
             labels = labels.to(device)
             # zero the parameter gradients
             optimizer.zero_grad()
-            outputs_ = resnet(inputs)
+            outputs_ = resnet(inputs).to(device)
             for j in range(embed_logs):
                 if j == 0:
                     temp_outputs = torch.zeros((len(inputs), num_classes))
