@@ -55,8 +55,8 @@ class FeedForwardClassifier(torch.nn.Module):
         logits = self.forward(embedding)
         probabilities = torch.nn.Softmax()(logits)
         return torch.argmax(probabilities, dim=1)
-    
-def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", cl_embed_size = 1000, batch_size = 128):
+
+def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", load_previous = False, cl_embed_size = 1000, batch_size = 128):
 
     # Define relative importance if mode == "matryoshka"
     if mode == "matryoshka":
@@ -64,13 +64,23 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", cl_e
     else:
         embed_logs = 1         
 
-    # Define the list of classifiers
-    classifiers = []
-    best_classifiers =[None for i in range(embed_logs)]
-    for i in range(embed_logs):
-        classifiers.append(FeedForwardClassifier(output_dim=num_classes, embed_size=min(2**(i+1), cl_embed_size)))
-        classifiers[i-1].to(device=device)
-        classifiers[i-1].train()
+    # Load old model if needed:
+    if load_previous:
+        resnet.load_state_dict(torch.load("../../best_resnet_model.pth"))
+        classifiers = []
+        for i in range(embed_logs):
+            classifiers.append(FeedForwardClassifier(output_dim=num_classes, embed_size=min(2**(i+1), cl_embed_size)))
+            classifiers[i].load_state_dict(torch.load("../../best_classifier_"+str(i+1)+".pth"))
+            classifiers[i].to(device=device)
+            classifiers[i].train()
+    else:
+        # Define the list of classifiers
+        classifiers = []
+        best_classifiers =[None for i in range(embed_logs)]
+        for i in range(embed_logs):
+            classifiers.append(FeedForwardClassifier(output_dim=num_classes, embed_size=min(2**(i+1), cl_embed_size)))
+            classifiers[i-1].to(device=device)
+            classifiers[i-1].train()
 
     # Define loss function
     criterion =  nn.CrossEntropyLoss()
