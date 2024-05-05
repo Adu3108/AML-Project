@@ -131,7 +131,6 @@ def train(resnet, num_classes = 100, num_epochs = 100, mode = "matryoshka", cl_e
 
         print('[%d, %5d] loss: %.3f' %
                 (epoch + 1, i + 1, running_loss))
-       
         for i in range(embed_logs):
             classifiers[i].eval()
         net.eval()
