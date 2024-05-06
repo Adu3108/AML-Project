@@ -346,7 +346,7 @@ FashionMNIST_test_dataset = datasets.FashionMNIST(root="data/FashionMNIST", trai
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 batch_size = 32
-um_samples = 200
+num_samples = 200
 model_epochs = 10
 classifier_epochs = 20
 patience = 5

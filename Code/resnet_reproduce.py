@@ -53,6 +53,7 @@ class FeedForwardClassifier(torch.nn.Module):
 
     def predict(self, embedding):
         logits = self.forward(embedding)
+        print(logits)
         probabilities = torch.nn.Softmax()(logits)
         return torch.argmax(probabilities, dim=1)
 
